@@ -229,3 +229,6 @@ img {
   user-select: none;
   -webkit-user-drag: none;
 }
+.news-text {
+  white-space: pre-wrap;
+}

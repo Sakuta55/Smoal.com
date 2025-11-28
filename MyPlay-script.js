@@ -1,9 +1,19 @@
-// API endpoints
-const API_BASE_URL = 'http://192.168.223.28:5000'; // سيتم تغييرها لرابط السيرفر الفعلي
-const DOWNLOAD_API = `${API_BASE_URL}/mcs/download`; // تغيير من NEWS_API إلى DOWNLOAD_API
+// بيانات افتراضية للتجربة - بدون الاتصال بالسيرفر
+const defaultDownloadsData = [
+    {
+        id: 1,
+        text: `
+        لعبة سباق 3D
+        ، الاسم : Speed Race X Beta1
+        `,
+        image_path: "images/speed.png",
+        download_url: "https://apkpure.com/speed-race-x-beta1/com.speedracex.game"
+    },
+    
+];
 
 // عناصر DOM
-const downloadsContainer = document.getElementById('newsContainer'); // سأبقيه كما هو لأن الـ HTML لم يتغير
+const downloadsContainer = document.getElementById('newsContainer');
 const emptyState = document.getElementById('emptyState');
 
 // دالة إنشاء بطاقة إصدار تحميل
@@ -23,28 +33,19 @@ function createDownloadCard(downloadItem) {
     `;
 }
 
-// دالة جلب إصدارات التحميل من السيرفر
+// دالة جلب إصدارات التحميل من البيانات الافتراضية
 async function fetchDownloads() {
-    try {
-        const response = await fetch(DOWNLOAD_API);
-        
-        if (!response.ok) {
-            throw new Error('فشل في جلب البيانات من السيرفر');
-        }
-        
-        const downloadsData = await response.json();
-        return downloadsData;
-    } catch (error) {
-        console.error('خطأ في جلب إصدارات التحميل:', error);
-        showError('تعذر تحميل الإصدارات. يرجى المحاولة لاحقاً.');
-        return [];
-    }
+    // استخدام البيانات الافتراضية بدلاً من الاتصال بالسيرفر
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(defaultDownloadsData);
+        }, 100); // تأخير بسيط لمحاكاة التحميل
+    });
 }
 
 // دالة عرض إصدارات التحميل
 function displayDownloads(downloadsData) {
-    // تفريغ الحاوية أولاً
-    downloadsContainer.innerHTML = '';
+    // لا نقوم بتفريغ الحاوية هنا لأننا نريد إضافة البيانات الافتراضية
     
     if (downloadsData && downloadsData.length > 0) {
         // إخفاء حالة عدم وجود إصدارات
@@ -157,18 +158,22 @@ document.head.appendChild(styleSheet);
 document.addEventListener('DOMContentLoaded', async function() {
     // عرض حالة التحميل
     downloadsContainer.innerHTML = `
-        <div style="text-align: center; padding: 40px; width: 100%;">
-            <div style="font-size: 2rem; margin-bottom: 15px;">⏳</div>
-            <p>جاري تحميل الإصدارات...</p>
-        </div>
     `;
     
+    // استخدام البيانات الافتراضية بدلاً من الاتصال بالسيرفر
     const downloadsData = await fetchDownloads();
     displayDownloads(downloadsData);
 });
 
-// تحديث الإصدارات تلقائياً كل دقيقة (اختياري)
-setInterval(async () => {
-    const downloadsData = await fetchDownloads();
-    displayDownloads(downloadsData);
-}, 60000);
+// تعطيل التحديث التلقائي لأننا نستخدم بيانات افتراضية
+// setInterval(async () => {
+//     const downloadsData = await fetchDownloads();
+//     displayDownloads(downloadsData);
+// }, 60000);
+
+
+
+//        <div style="text-align: center; padding: 40px; width: 100%;">
+//            <div style="font-size: 2rem; margin-bottom: 15px;">⏳</div>
+//            <p>جاري تحميل الإصدارات...</p>
+//        </div>
